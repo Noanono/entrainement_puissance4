@@ -16,6 +16,7 @@ Console.WriteLine("Entrez le nombre de joueurs :");
 var nbJoueurs = int.Parse(Console.ReadLine());
 var joueurs = new string[nbJoueurs, 2];
 var joueurs_c = new string[nbJoueurs];
+var joueurs_e = new int[nbJoueurs];
 for (int i = 0; i < nbJoueurs; i++)
 {
     Console.WriteLine($"Entrez le nom du joueur {i + 1} :");
@@ -55,14 +56,26 @@ for (int i = 0; i < nbJoueurs; i++)
     joueurs_c[i] = joueurs[i, 1];
 }
 
+for (int i = 0; i < nbJoueurs; i++)
+{
+    joueurs_e[i] = 3;
+}
+
 Debut_jeu:
 var joueurActuel = 0;
 var nbCases = taille * taille;
 var casesJouees = 0;
 while (true)
 {
-    Console.WriteLine($"C'est au tour de {joueurs[joueurActuel, 0]} de jouer.");
+    var explo = "non";
+    Console.WriteLine($"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nC'est au tour de {joueurs[joueurActuel, 0]} de jouer.");
     Afficher_plateau();
+    if (joueurs_e[joueurActuel] > 0)
+    {
+        Console.WriteLine($"Il vous reste {joueurs_e[joueurActuel]} pions explosifs.");
+        Console.WriteLine("Voulez vous utiliser un piont eplosif (oui/non) :");
+        explo = Console.ReadLine();
+    }
     Console.WriteLine("Entrez la colonne de la case à jouer :");
     mauvaise_colonne:
     var colonne = int.Parse(Console.ReadLine()) - 1;
@@ -75,14 +88,34 @@ while (true)
     {
         if (plateau[ligne, colonne] == null)
         {
+            if (explo == "oui")
+            {
+                for (int i = -1; i <= 1; i++)
+                {
+                    for (int j = -1; j <= 1; j++)
+                    {
+                        if ((ligne + i >= 0 && ligne + i <= taille - 1) && (colonne + j >= 0 && colonne + j <= taille - 1) && plateau[ligne + i, colonne + j] != null)
+                        {
+                            plateau[ligne + i, colonne + j] = null;
+                        }
+                    }
+                }
+                joueurs_e[joueurActuel]--;
+                if (ligne + 1 < taille)
+                {
+                    plateau[ligne + 1, colonne] = joueurs[joueurActuel, 1];
+                    casesJouees++;
+                    break;
+                }
+            }
             plateau[ligne, colonne] = joueurs[joueurActuel, 1];
             casesJouees++;
             break;
-        }
-        if (ligne == 0)
-        {
-            Console.WriteLine("Colonne pleine, veuillez entrer une autre colonne.");
-            goto mauvaise_colonne;
+            if (ligne == 0)
+            {
+                Console.WriteLine("Colonne pleine, veuillez entrer une autre colonne.");
+                goto mauvaise_colonne;
+            }
         }
     }
     if (CheckVictory() != null)
