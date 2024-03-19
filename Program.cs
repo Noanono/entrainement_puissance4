@@ -81,6 +81,7 @@ while (true)
 
     // Choix pion spéciaux
     var use = new string[4] { "non", "non", "non", "non" };
+    var bloquant = new int[2,3*nbJoueurs];
 
     for (int i = 0; i < 4; i++)
     {
@@ -151,7 +152,9 @@ while (true)
             {
                 for (int i = -1; i <= 1; i++)
                 {
-                    if ((ligne + i >= 0 && ligne + i <= taille - 1) && (colonne + i >= 0 && colonne + i <= taille - 1) && (colonne - i >= 0 && colonne - i <= taille - 1))
+                    if ((ligne + i >= 0 && ligne + i <= taille - 1) 
+                        && (colonne + i >= 0 && colonne + i <= taille - 1) 
+                        && (colonne - i >= 0 && colonne - i <= taille - 1))
                     {
                         plateau[ligne + i, colonne + i] = null;
                         plateau[ligne + i, colonne - i] = null;
@@ -174,6 +177,16 @@ while (true)
                 break;
             }
             //fin enclume
+
+            //gestion du pion bloquant
+            if (use[3] == "oui")
+            {
+                bloquant[0, 3 - (joueurs_e[joueurActuel, 3]), joueurActuel] = ligne;
+                bloquant[1, 3 - (joueurs_e[joueurActuel, 3]), joueurActuel] = colonne;
+                joueurs_e[joueurActuel, 3]--;
+                break;
+            }
+            //fin bloquant
 
             plateau[ligne, colonne] = joueurs[joueurActuel, 1];
             casesJouees++;
