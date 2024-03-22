@@ -17,6 +17,7 @@ for (int i = 0; i < nbJoueurs; i++)
     Console.WriteLine($"Entrez la couleur du joueur {i + 1} :");
     Coul:
     joueurs[i, 1] = Console.ReadLine();
+    joueurs[i, 1] = joueurs[i, 1].ToLower();
     switch (joueurs[i, 1])
     {
         case "rouge":
@@ -80,10 +81,10 @@ while (true)
     Afficher_plateau();
 
     // Choix pion spéciaux
-    var use = new string[4] { "non", "non", "non", "non" };
+    var use = new string[3] { "non", "non", "non" };
     var bloquant = new int[2,3*nbJoueurs];
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 3; i++)
     {
         if (joueurs_e[joueurActuel, i] > 0)
         {
@@ -92,7 +93,6 @@ while (true)
                 0 => "pion explosif en forme de croix",
                 1 => "pion explosif en forme diagonale",
                 2 => "pion enclume",
-                3 => "pion bloquant",
                 _ => "pion classique",
             };
             Console.WriteLine($"Il vous reste {joueurs_e[joueurActuel, i]} {type}.");
@@ -179,13 +179,7 @@ while (true)
             //fin enclume
 
             //gestion du pion bloquant
-            if (use[3] == "oui")
-            {
-                bloquant[0, 3 - (joueurs_e[joueurActuel, 3]), joueurActuel] = ligne;
-                bloquant[1, 3 - (joueurs_e[joueurActuel, 3]), joueurActuel] = colonne;
-                joueurs_e[joueurActuel, 3]--;
-                break;
-            }
+            
             //fin bloquant
 
             plateau[ligne, colonne] = joueurs[joueurActuel, 1];
